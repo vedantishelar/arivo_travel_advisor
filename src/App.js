@@ -42,9 +42,19 @@ const App = () => {
 
       getPlacesData(type, bounds.sw, bounds.ne)
         .then((data) => {
-          setPlaces(data.filter((place) => place.name && place.num_reviews > 0));
+          if (data && Array.isArray(data)) {
+            setPlaces(data.filter((place) => place.name && place.num_reviews > 0));
+          } else {
+            setPlaces([]);
+            console.error('Invalid data format received:', data);
+          }
           setFilteredPlaces([]);
           setRating('');
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching places:', error);
+          setPlaces([]);
           setIsLoading(false);
         });
     }
